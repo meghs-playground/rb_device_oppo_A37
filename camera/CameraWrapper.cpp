@@ -501,6 +501,15 @@ static int camera_device_close(hw_device_t *device)
 
     wrapper_dev = (wrapper_camera_device_t*) device;
 
+    if (!wrapper_dev->vendor) {
+        ALOGE("%s: wrapper device has no vendor", __FUNCTION__);
+        ret = -ENODEV;
+        if (wrapper_dev->base.ops)
+            free(wrapper_dev->base.ops);
+        free(wrapper_dev);
+        goto done;
+    }
+
     if (!wrapper_dev->camera_released) {
         ALOGI("%s: releasing camera device with id %d", __FUNCTION__,
                 wrapper_dev->id);
@@ -557,15 +566,17 @@ static int camera_device_open(const hw_module_t *module, const char *name,
         cameraid = atoi(name);
         num_cameras = gVendorModule->get_number_of_cameras();
 
-        fixed_set_params = (char **) malloc(sizeof(char *) * num_cameras);
         if (!fixed_set_params) {
-            ALOGE("parameter memory allocation fail");
-            rv = -ENOMEM;
-            goto fail;
+            fixed_set_params = (char **) malloc(sizeof(char *) * num_cameras);
+            if (!fixed_set_params) {
+                ALOGE("parameter memory allocation fail");
+                rv = -ENOMEM;
+                goto fail;
+            }
+            memset(fixed_set_params, 0, sizeof(char *) * num_cameras);
         }
-        memset(fixed_set_params, 0, sizeof(char *) * num_cameras);
 
-        if (cameraid > num_cameras) {
+        if (cameraid >= num_cameras) {
             ALOGE("camera service provided cameraid out of bounds, "
                     "cameraid = %d, num supported = %d",
                     cameraid, num_cameras);
@@ -597,6 +608,19 @@ static int camera_device_open(const hw_module_t *module, const char *name,
             ALOGE("vendor camera open fail");
             goto fail;
         }
+
+        /*
+         * Some vendor HALs return success without filling in the device
+         * pointer when their internal open fails. Never hand out a wrapper
+         * with a NULL vendor: every VENDOR_CALL would dereference it (and
+         * CameraService would crash in camera_set_callbacks()).
+         */
+        if (!camera_device->vendor) {
+            ALOGE("vendor camera open returned success but no device");
+            rv = -ENODEV;
+            goto fail;
+        }
+
         ALOGV("%s: got vendor camera device 0x%08X",
                 __FUNCTION__, (uintptr_t)(camera_device->vendor));
 
@@ -646,6 +670,13 @@ static int camera_device_open(const hw_module_t *module, const char *name,
 
 fail:
     if (camera_device) {
+        if (camera_device->vendor) {
+            if (!camera_device->camera_released)
+                VENDOR_CALL(camera_device, release);
+            camera_device->vendor->common.close(
+                    (hw_device_t *)camera_device->vendor);
+            camera_device->vendor = NULL;
+        }
         free(camera_device);
         camera_device = NULL;
     }
