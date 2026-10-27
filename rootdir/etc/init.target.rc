@@ -37,10 +37,23 @@ on boot
     chown root system /sys/class/power_supply/bms/voltage_ocv
     chmod 0664 /sys/class/power_supply/bms/current_now
     chmod 0664 /sys/class/power_supply/bms/voltage_ocv
+    # Sensors
     chown system system /sys/class/sensors/proximity/enable
     chmod 0660 /sys/class/sensors/proximity/enable
+    chown system system /sys/class/sensors/proximity/poll_delay
+    chmod 0660 /sys/class/sensors/proximity/poll_delay
     chown system system /sys/class/sensors/light/enable
     chmod 0660 /sys/class/sensors/light/enable
+    chown system system /sys/class/sensors/light/poll_delay
+    chmod 0660 /sys/class/sensors/light/poll_delay
+    chown system system /sys/class/sensors/accelerometer/enable
+    chmod 0660 /sys/class/sensors/accelerometer/enable
+    chown system system /sys/class/sensors/accelerometer/poll_delay
+    chmod 0660 /sys/class/sensors/accelerometer/poll_delay
+    chown system system /sys/class/sensors/compass/enable
+    chmod 0660 /sys/class/sensors/compass/enable
+    chown system system /sys/class/sensors/compass/poll_delay
+    chmod 0660 /sys/class/sensors/compass/poll_delay
 
 on init
     # Configure Zram and Zswap
