@@ -38,7 +38,7 @@ TARGET_CPU_VARIANT := cortex-a53
 TARGET_USES_64_BIT_BINDER := true
 
 # Kernel
-BOARD_KERNEL_CMDLINE := console=ttyHSL0,115200,n8 androidboot.console=ttyHSL0 androidboot.hardware=qcom msm_rtb.filter=0x237 ehci-hcd.park=3 androidboot.bootdevice=7824900.sdhci lpm_levels.sleep_disabled=1 earlyprintk ramoops.mem_address=0x9ff00000 ramoops.mem_size=0x400000 ramoops.record_size=0x40000
+BOARD_KERNEL_CMDLINE := console=ttyHSL0,115200,n8 androidboot.console=ttyHSL0 androidboot.hardware=qcom msm_rtb.filter=0x237 ehci-hcd.park=3 androidboot.bootdevice=7824900.sdhci lpm_levels.sleep_disabled=1 earlyprintk ramoops.mem_address=0x9ff00000 ramoops.mem_size=0x400000 ramoops.record_size=0x40000 cma=128M
 BOARD_KERNEL_BASE := 0x80000000
 BOARD_KERNEL_TAGS_OFFSET := 0x00000100
 BOARD_RAMDISK_OFFSET := 0x01000000
@@ -47,7 +47,11 @@ BOARD_KERNEL_OFFSET := 0x00008000
 BOARD_KERNEL_CMDLINE += androidboot.selinux=permissive
 BOARD_MKBOOTIMG_ARGS += --ramdisk_offset 0x01000000 --tags_offset 0x00000100
 BOARD_KERNEL_IMAGE_NAME := Image
-TARGET_KERNEL_SOURCE := kernel/oppo/msm8939
+ifeq ($(wildcard kernel/oppo/msm8916),)
+    TARGET_KERNEL_SOURCE := kernel/oppo/msm8939
+else
+    TARGET_KERNEL_SOURCE := kernel/oppo/msm8916
+endif
 BOARD_KERNEL_SEPARATED_DT := true
 TARGET_KERNEL_ARCH := arm64
 TARGET_CUSTOM_DTBTOOL := dtbToolOppo
