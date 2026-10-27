@@ -17,6 +17,10 @@
 # Boot animation
 TARGET_SCREEN_HEIGHT := 1280
 TARGET_SCREEN_WIDTH := 720
+TARGET_BOOTANIMATION_HALF_RES := true
+TARGET_BOOTANIMATION_MULTITHREAD_DECODE := true
+TARGET_BOOTANIMATION_PRELOAD := true
+TARGET_BOOTANIMATION_TEXTURE_CACHE := true
 
 # AAPT CONFIG
 PRODUCT_AAPT_CONFIG := normal
@@ -45,11 +49,22 @@ PRODUCT_PACKAGES += \
 PRODUCT_PROPERTY_OVERRIDES += \
     debug.composition.type=dyn \
     ro.surface_flinger.max_frame_buffer_acquired_buffers=3 \
+    ro.surface_flinger.start_graphics_allocator_service=true \
+    ro.surface_flinger.force_hwc_copy_for_virtual_displays=true \
+    ro.surface_flinger.has_HDR_display=false \
+    ro.surface_flinger.has_wide_color_display=false \
+    ro.surface_flinger.use_context_priority=true \
+    ro.surface_flinger.supports_background_blur=false \
+    persist.sys.sf.disable_blurs=true \
     ro.surface_flinger.vsync_event_phase_offset_ns=5000000 \
     ro.surface_flinger.vsync_sf_event_phase_offset_ns=7500000 \
     debug.mdpcomp.idletime=600 \
     persist.hwc.mdpcomp.enable=true \
     persist.hwc.ptor.enable=false \
+    ro.config.avoid_gfx_accel=true \
+    ro.telephony.ril.config=legacypollstate \
+    pm.dexopt.first-boot=quicken \
+    pm.dexopt.boot=extract \
     pm.dexopt.shared=quicken \
     pm.dexopt.downgrade_after_inactive_days=10 \
     debug.enable.sglscale=0 \
@@ -250,13 +265,14 @@ PRODUCT_COPY_FILES += \
 DEVICE_PACKAGE_OVERLAYS += \
     $(LOCAL_PATH)/overlay
 
-# Properties
+# Bluetooth Properties
 PRODUCT_PROPERTY_OVERRIDES += \
-    vendor.qcom.bluetooth.soc=smd \
+    vendor.qcom.bluetooth.soc=pronto \
+    vendor.bluetooth.soc=pronto \
     ro.bluetooth.dun=true \
     ro.bluetooth.hfp.ver=1.7 \
     ro.bluetooth.sap=true \
-    ro.qualcomm.bt.hci_transport=smd
+    ro.qualcomm.bt.hci_transport=pronto
 
 # Keymaster HAL
 PRODUCT_PACKAGES += \
@@ -410,6 +426,7 @@ PRODUCT_PROPERTY_OVERRIDES += \
     debug.stagefright.omx_default_rank.sw-audio=1 \
     debug.stagefright.omx_default_rank=0 \
     vendor.mediacodec.binder.size=6 \
+    media.stagefright.thumbnail.prefer_hw_codecs=true \
     vidc.enc.narrow.searchrange=1
 
 # Keylayout
@@ -486,8 +503,20 @@ PRODUCT_PROPERTY_OVERRIDES += \
     dalvik.vm.dex2oat-flags=--no-watch-dog \
     dalvik.vm.dex2oat-swap=false \
     dalvik.vm.dex2oat-threads=2 \
+    dalvik.vm.dex2oat-cpu-set=0,1 \
+    dalvik.vm.image-dex2oat-threads=4 \
+    dalvik.vm.image-dex2oat-cpu-set=0,1,2,3 \
     ro.vendor.qti.am.reschedule_service=true \
     sys.use_fifo_ui=1
+
+# LMKD
+PRODUCT_PROPERTY_OVERRIDES += \
+    ro.lmk.use_psi=false \
+    ro.lmk.critical_upgrade=true \
+    ro.lmk.upgrade_pressure=40 \
+    ro.lmk.downgrade_pressure=60 \
+    ro.lmk.kill_heaviest_task=true \
+    ro.lmk.kill_timeout_ms=100
 
 # TextClassifier
 PRODUCT_PACKAGES += \

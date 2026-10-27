@@ -389,4 +389,14 @@
          manager will disable alpha trasformation in animations where not
          strictly needed. -->
     <bool name="config_sf_limitedAlpha">true</bool>
+
+    <!-- Power Management: Specifies whether to decouple the auto-suspend state of the
+         device from the display on/off state. -->
+    <bool name="config_powerDecoupleAutoSuspendModeFromDisplay">true</bool>
+
+    <!-- Avoid accelerated graphics in certain places to reduce RAM footprint -->
+    <bool name="config_avoidGfxAccel">true</bool>
+
+    <!-- Feature flag to enable memory efficient task snapshots in recents -->
+    <bool name="config_lowRamTaskSnapshotsAndRecents">true</bool>
 </resources>
