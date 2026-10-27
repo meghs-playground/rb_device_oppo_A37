@@ -2,6 +2,12 @@ on init
     # Drop write bit from cpu_min_freq so that libqti-perfd can't set it
     chmod 0444 /sys/module/msm_performance/parameters/cpu_min_freq
 
+    # add a cpuset for the camera daemon
+    mkdir /dev/cpuset/camera-daemon
+    chown system system /dev/cpuset/camera-daemon
+    chown system system /dev/cpuset/camera-daemon/tasks
+    chmod 0664 /dev/cpuset/camera-daemon/tasks
+
 on enable-low-power
 
     # HMP scheduler settings
