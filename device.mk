@@ -43,16 +43,16 @@ PRODUCT_PACKAGES += \
 
 # Properties
 PRODUCT_PROPERTY_OVERRIDES += \
-    debug.composition.type=c2d \
+    debug.composition.type=dyn \
     ro.surface_flinger.max_frame_buffer_acquired_buffers=3 \
     ro.surface_flinger.vsync_event_phase_offset_ns=5000000 \
     ro.surface_flinger.vsync_sf_event_phase_offset_ns=7500000 \
     debug.mdpcomp.idletime=600 \
     persist.hwc.mdpcomp.enable=true \
-    persist.hwc.ptor.enable=true \
+    persist.hwc.ptor.enable=false \
     pm.dexopt.shared=quicken \
     pm.dexopt.downgrade_after_inactive_days=10 \
-    debug.enable.sglscale=1 \
+    debug.enable.sglscale=0 \
     debug.sf.hw=1 \
     debug.hwui.renderer=opengl \
     debug.egl.hw=1 \
@@ -61,9 +61,7 @@ PRODUCT_PROPERTY_OVERRIDES += \
     debug.sf.disable_backpressure=1 \
     debug.sf.latch_unsignaled=1 \
     debug.cpurend.vsync=false \
-    persist.hwc.mdpcomp.enable=true \
-    persist.hwc.ptor.enable=true \
-    debug.sf.gpu_comp_tiling=1 \
+    debug.sf.gpu_comp_tiling=0 \
     debug.performance.tuning=1 \
     video.accelerate.hw=1
 
